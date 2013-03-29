@@ -1,5 +1,7 @@
 package com.topcat.npclib.entity;
 
+import java.lang.reflect.InvocationTargetException;
+
 import net.minecraft.server.v1_5_R2.EntityPlayer;
 import net.minecraft.server.v1_5_R2.Packet18ArmAnimation;
 import net.minecraft.server.v1_5_R2.WorldServer;
@@ -71,14 +73,28 @@ public class HumanNPC extends NPC {
 			Class.forName("org.getspout.spout.Spout");
 
 			if (!(getEntity().getBukkitEntity().getClass().isAssignableFrom(SpoutCraftPlayer.class))) {
-				Entity e = SpoutCraftPlayer.class.getConstructor(CraftServer.class, EntityPlayer.class).newInstance((CraftServer) Bukkit.getServer(), (EntityPlayer) getEntity());
-				((NPCEntity) getEntity).setBukkitEntity(e);
+				Class<?> SC = SpoutCraftPlayer.class;
+				Entity e = (Entity) SC.getConstructor(CraftServer.class, EntityPlayer.class).newInstance((CraftServer) Bukkit.getServer(), (EntityPlayer) getEntity());
+				((NPCEntity) getEntity()).setBukkitEntity(e);
 			}
 
 			return (SpoutPlayer) getEntity().getBukkitEntity();
 		} catch (ClassNotFoundException e) {
 			Bukkit.getServer().getLogger().warning("Cannot get spout player without spout installed");
+		} catch (IllegalArgumentException e1) {
+			e1.printStackTrace();
+		} catch (SecurityException e1) {
+			e1.printStackTrace();
+		} catch (InstantiationException e1) {
+			e1.printStackTrace();
+		} catch (IllegalAccessException e1) {
+			e1.printStackTrace();
+		} catch (InvocationTargetException e1) {
+			e1.printStackTrace();
+		} catch (NoSuchMethodException e1) {
+			e1.printStackTrace();
 		}
+		
 		return null;
 	}
 
